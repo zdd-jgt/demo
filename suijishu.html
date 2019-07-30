@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Document</title>
+
+</head>
+
+<body>
+
+<button class="btn">生成随机数</button>
+
+<script src="../jquery-1.8.3.min.js"></script>   //jq文件可以随机一个
+
+<script>
+
+    $('.btn').click(function(){
+
+        var ran=Math.ceil(Math.random()*100)
+        if(ran<55){  //通过概率判断选取数字
+            var needNum= Math.ceil(Math.random()*5)    //选取需求数字
+        }else if(55 < ran && ran< 95){
+            var needNum= Math.ceil(Math.random()*5+5)
+        }else if(95<ran && ran<100){
+
+            var needNum= Math.ceil(Math.random()*2+10)
+        }
+        console.log(needNum,"上")
+
+
+        // console.log(needNum)
+        })
+
+    console.log(Math.random()*(12)|0)
+    console.log(Math.random()*(12))
+
+</script>
+
+</body>
+
+</html>

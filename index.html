@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style type="text/css">
+        #lottery{
+            width:574px;
+            height:584px;
+            margin:20px auto 0;
+            /*background:url(images/bg.jpg) no-repeat;*/
+            padding:50px 55px;
+            background: #00c0ef;
+        }
+        #lottery table td{
+            padding: 0px;
+            margin: 0px;
+            width:142px;
+            height:142px;
+            text-align:center;
+            vertical-align:middle;
+            color:#333;
+            border-width: 0px;
+        }
+        #lottery table td img{
+            width: 130px;
+            height: 130px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        #lottery table td a{
+            width:284px;
+            height:284px;
+            line-height:150px;
+            display:block;
+            text-decoration:none;
+        }
+        #lottery table td.active{
+            background-color:#ea0000;
+        }
+        #lottery table tr{
+            height: 142px;
+        }
+        .reward_info{
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            position: fixed;
+            right: 0;
+            left: 0;
+            top: 0;
+            margin: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            text-align: center;
+
+        }
+
+        .reward_info_box{
+            border-radius: .6rem;
+            background-color: #fff;
+            width: 80%;
+            margin:100px auto 0;
+            height: 500px;
+        }
+
+        .reward_info_img{
+            width: 720px;
+            height: 226px;
+            background-size: 100% 100%;
+            margin: 10px auto 0;
+            /*position: absolute;*/
+
+        }
+        .reward_info_img img{
+            width: 140px;
+        }
+
+        .reward_info_btn > button{
+            /*background: #f00;*/
+            width: 150px;
+            border-radius:10px;
+            background: #ff9000;
+            color: #fff;
+            font-size: 24px;
+            font-weight: bolder;
+            text-align: center;
+            vertical-align:middle;
+            padding-top: 5px;
+            padding-bottom: 7px;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+<div id="lottery">
+    <table border="0" cellpadding="0" cellspacing="0">
+        <tr>
+            <td class="lottery-unit lottery-unit-0"><img src="images/1.png"></td>
+            <td class="lottery-unit lottery-unit-1"><img src="images/2.png"></td>
+            <td class="lottery-unit lottery-unit-2"><img src="images/3.png"></td>
+            <td class="lottery-unit lottery-unit-3"><img src="images/4.jpg"></td>
+        </tr>
+        <tr>
+            <td class="lottery-unit lottery-unit-11"><img src="images/12.jpg"></td>
+            <td colspan="2" rowspan="2"><a href="#">开始</a></td>
+            <td class="lottery-unit lottery-unit-4"><img src="images/5.jpg"></td>
+        </tr>
+        <tr>
+            <td class="lottery-unit lottery-unit-10"><img src="images/11.jpg"></td>
+            <td class="lottery-unit lottery-unit-5"><img src="images/6.jpg"></td>
+        </tr>
+        <tr>
+            <td class="lottery-unit lottery-unit-9"><img src="images/10.jpg"></td>
+            <td class="lottery-unit lottery-unit-8"><img src="images/9.jpg"></td>
+            <td class="lottery-unit lottery-unit-7"><img src="images/8.jpg"></td>
+            <td class="lottery-unit lottery-unit-6"><img src="images/7.jpg"></td>
+        </tr>
+    </table>
+</div>
+
+<script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    var lottery={
+        index:-1,    //当前转动到哪个位置，起点位置
+        count:0,    //总共有多少个位置
+        timer:0,    //setTimeout的ID，用clearTimeout清除
+        speed:20,    //初始转动速度
+        times:0,    //转动次数
+        cycle:50,    //转动基本次数：即至少需要转动多少次再进入抽奖环节
+        prize:-1,    //中奖位置
+        init:function(id){
+            if ($("#"+id).find(".lottery-unit").length>0) {
+                $lottery = $("#"+id);
+                $units = $lottery.find(".lottery-unit");
+                this.obj = $lottery;
+                this.count = $units.length; //获取总共的位置数
+                $lottery.find(".lottery-unit-"+this.index).addClass("active"); //设置抽奖开始的初始位置（用active类）
+            };
+        },
+        roll:function(){
+            var index = this.index;
+            var count = this.count;
+            var lottery = this.obj;
+            $(lottery).find(".lottery-unit-"+index).removeClass("active"); //移除上一个激活的奖品选项
+            index += 1;
+            if (index>count-1) { //环变成链
+                index = 0;
+            };
+            $(lottery).find(".lottery-unit-"+index).addClass("active");//将当前这个奖品选项设置为激活
+            this.index=index;
+            return false;
+        },
+        stop:function(index){
+            this.prize=index; //奖品位置
+            return false;
+        }
+    };
+
+    function roll(){
+        lottery.times += 1;
+        lottery.roll(); //调用旋转函数
+        if (lottery.times > lottery.cycle+10 && lottery.prize==lottery.index) { //这里是转盘停下来，超过基础转数10次以上，并且index指到那个奖品就停下来
+            clearTimeout(lottery.timer); //清除设置的timeout，也就是转盘停下来
+            lottery.prize=-1; //奖品初始化为-1
+            lottery.times=0; //已经转动次数初始化为0
+            click=false; //开始转动了，让点击变的不可点击
+            // alert(lottery.index);
+            reportRewardAnswer(lottery.index);
+        }else{
+            if (lottery.times<lottery.cycle) { //如果还应该转，就接着转
+                lottery.speed -= 10; //转的事件间隔逐渐变小，从而转速变快
+            }else if(lottery.times==lottery.cycle) { //基础次数到了，确定奖品，但是后面还要转到奖品这去
+                // var index = Math.random()*(lottery.count)|0; //随机数确定奖品是哪一个
+                //控制随机概率
+                var ran=Math.ceil(Math.random()*100)
+                if(ran<=55){  //通过概率判断选取数字
+                    var index= Math.ceil(Math.random()*5)    //选取需求数字
+                }else if(55 < ran && ran<= 95){
+                    var index= Math.ceil(Math.random()*5+5)
+                }else if(95<ran ){
+                    var index= Math.ceil(Math.random()*2+10)
+                }
+                console.log(index)
+                lottery.prize = index -1;
+            }else{ //当转动次数达到转动基本次数后
+                //(lottery.prize==0 && lottery.index==7) 这句话的意思是如果随机数是0，那么奖品就是是第一个，从7的位置就开始+110毫秒，后面都是加20ms
+                //(lottery.prize==0 && lottery.index==7) 没有这句话的话，因为这个是环，不好判断0的前一个，所以这里用了特例判断
+                if (lottery.times > lottery.cycle+10 && ((lottery.prize==0 && lottery.index==7) || lottery.prize==lottery.index+1)) {
+                    lottery.speed += 110; //变慢很多点，这是最后那一次累加的110毫秒
+                }else{
+                    lottery.speed += 20; //变慢一点点
+                }
+            }
+            if (lottery.speed<40) { //设置最小的函数执行事件间隔，也就是设置最大的转速
+                lottery.speed=40;
+            };
+            //console.log(lottery.times+'^^^^^^'+lottery.speed+'^^^^^^^'+lottery.prize+'^^^^^^^'+lottery.index);
+            lottery.timer = setTimeout(roll,lottery.speed); //lottery.speed毫秒后执行roll方法，所以这里也算是递归啦
+        }
+        return false;
+    }
+
+    var click=false;
+
+    window.onload=function(){
+        //reportRewardAnswer(lottery.index);
+        lottery.init('lottery'); //对象的方法
+        $("#lottery a").click(function(){
+            if (click) {
+                return false;
+            }else{
+                lottery.speed=100;
+                roll();
+                click=true;
+                return false;
+            }
+        });
+    };
+
+
+
+    function reportRewardAnswer(str){
+        setTimeout(function(){
+            console.log(str)
+            str1 = str +1;
+            var imgUrl = $(".lottery-unit-"+str).find('img').attr("src")
+            $.giftWarm("恭喜你抽中了",'<span>'+str1+'</span>号奖品',imgUrl);
+        },600);
+    }
+
+    jQuery.extend({
+        giftWarm : function(b, a, c) {
+            $("body")
+                .append(
+                    '<div id="reward_info" class="reward_info"> <div class="reward_info_box"><div class="reward_info_img"><img src='+c+' alt=""></div><h3>'
+                    + b
+                    + "</h3><h3>"
+                    + a
+                    + '</h3> <div class="reward_info_btn"><button>\u786e\u5b9a</button></div></div></div>');
+            $(".reward_info").click(function() {
+                $(this).remove()
+            })
+        }
+    });
+
+</script>
+
+
+
+</body>
+</html>

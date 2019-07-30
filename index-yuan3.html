@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        font-family: "Microsoft YaHei",微软雅黑;
+    }
+    .box {
+        width: 600px;
+        height: 600px;
+        background-color: #DEA681;
+        border-radius: 50%;
+        margin: 30px auto;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    .lottery {
+        width: 600px;
+        height: 600px;
+        margin: 0 auto;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+        background-color: #330000;
+        box-shadow: 0 0 15px #000;
+    }
+    .block {
+        box-shadow: 0 0 1px #000 inset;
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        transform-origin: right bottom 0;
+        -webkit-transform-origin: right bottom 0;
+    }
+    .block:nth-child(odd) {
+        background-color: #F1AAA6;
+    }
+    .block:nth-child(even) {
+        background-color: #FD5B78;
+    }
+    .block:nth-child(1) {
+        transform: rotate(0deg) skewY(45deg);
+    }
+    .block:nth-child(2) {
+        transform: rotate(45deg) skewY(45deg);
+    }
+    .block:nth-child(3) {
+        transform: rotate(90deg) skewY(45deg);
+    }
+    .block:nth-child(4) {
+        transform: rotate(135deg) skewY(45deg);
+    }
+    .block:nth-child(5) {
+        transform: rotate(180deg) skewY(45deg);
+    }
+    .block:nth-child(6) {
+        transform: rotate(225deg) skewY(45deg);
+    }
+    .block:nth-child(7) {
+        transform: rotate(270deg) skewY(45deg);
+    }
+    .block:nth-child(8) {
+        transform: rotate(315deg) skewY(45deg);
+    }
+    .content {
+        width: 200px;
+        height: 230px;
+        transform-origin: center center 0;
+        transform: skewY(-45deg) rotate(-22.5deg) translate(10px, 70px);
+        -webkit-transform: skewY(-45deg) rotate(-22.5deg) translate(10px, 70px);
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        text-align: center;
+    }
+    .content .img {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+    }
+    .content .text {
+        width: 100px;
+        height: 50px;
+        font-size: 20px;
+        line-height: 32px;
+        margin: 0 auto;
+    }
+    .content .none {
+        width: 34px;
+        height: 200px;
+        margin: 0 auto;
+        text-align: center;
+        font-size: 34px;
+        line-height: 200%
+        font-weight: bold;
+    }
+    .content img {
+        width: 80px;
+        height: 100px;
+    }
+    .btn {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 100px;
+        background-color: #9966CC;
+        position: absolute;
+        font-size: 28px;
+        top: 270px;
+        left: 270px;
+        cursor: pointer;
+        box-shadow: 0 0 14px #000 inset;
+        color: #FFF;
+    }
+    .str {
+        height: 0px;
+        width: 0px;
+        position: absolute;
+        top: 10px;
+        left: 300px;
+        border-top: 60px solid #9966CC;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+    }
+</style>
+<body>
+<div class="box">
+    <div class="lottery">
+        <div class="block">
+            <div class="content">
+                <div class="none">未中奖</div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="content">
+                <div class="img">
+                    <img src="images/1.png" />
+                </div>
+                <div class="text">
+                    <p>一等奖</p>
+                    <p>小米手环</p>
+                </div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="content">
+                <div class="none">未中奖</div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="content">
+                <div class="none">未中奖</div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="content">
+                <div class="img">
+                    <img src="images/2.png" />
+                </div>
+                <div class="text">
+                    <p>二等奖</p>
+                    <p>罗技鼠标</p>
+                </div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="content">
+                <div class="none">未中奖</div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="content">
+                <div class="img">
+                    <img src="images/3.png" />
+                </div>
+                <div class="text">
+                    <p>三等奖</p>
+                    <p>一包糖果</p>
+                </div>
+            </div>
+        </div>
+        <div class="block">
+            <div class="content">
+                <div class="none">未中奖</div>
+            </div>
+        </div>
+    </div>
+    <div class="btn">抽 奖</div>
+    <div class="str"></div>
+</div>
+</body>
+<script src="https://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script>
+<script>
+
+    var lottery = {
+        ch: 0
+    }
+
+    function clickBtn() {
+        var n1 = Math.floor(Math.random()*8+1);
+        var n2 = Math.floor(Math.random()*4+4);
+        lottery.ch = 45*n1 + 360*n2 + 22.5;
+        $(this).unbind().css("cursor", "wait");
+        $('.lottery').css({
+            "transition": "all 8s ease",
+            "transform": "rotate("+lottery.ch+"deg)",
+            "-webkit-transform": "rotate("+lottery.ch+"deg)"
+        });
+    }
+    $('.btn').bind('click', clickBtn);
+
+    $('.lottery')[0].addEventListener('transitionend',function(){
+        $('.btn').bind('click',clickBtn).css("cursor","pointer");
+        setTimeout(result,2000);
+    })
+
+    function result(){
+        alert("点击确认，再次开始游戏！");
+        $('.lottery').css({
+            "transition":"none",
+            "transform":"none",
+            "-webkit-transform":"none"
+        });
+    }
+</script>
+</html>
